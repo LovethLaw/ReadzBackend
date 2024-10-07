@@ -10,8 +10,15 @@ const createUser = catchAsync(async (req, res, next) => {
 	});
 })
 
+const allUsers =  catchAsync(async (req,res, next) => {
+	res.status(200).json({
+		status: "success",
+		users: []
+	});
+})
+
 
 
 module.exports = {
-	createUser,
+	createUser, allUsers
 }
