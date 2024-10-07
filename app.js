@@ -18,9 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', (req, res, next) => {
-  res.status(200).json({ status: "online" });
-})
+
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/books', bookRouter);
 
