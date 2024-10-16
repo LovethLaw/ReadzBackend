@@ -56,6 +56,7 @@ module.exports = ((err, req, res, next) => {
 	} else if (process.env.NODE_ENV === 'production') {
 
 		let error = { ...err };
+		error.message = err.message || "Something Went Wrong";
 		if (err.name === 'CastError') {
 			error = handleCastErrorProd(err);
 		} else if (err.code === 11000) {
