@@ -61,7 +61,7 @@ const loginUser = catchAsync(async (req, res, next) => {
 	})
 
 	if (!user) {
-		return next(new AppError("No User Found", 404))
+		return next(new AppError("You don't Have an Account", 404))
 	}
 
 
@@ -101,6 +101,12 @@ const profile = catchAsync(async (req, res, next) => {
 	const profile = await prisma.user.findUnique({
 		where: {
 			id: userId
+		},
+		select: {
+			firstName: true,
+			lastName: true,
+			email: true,
+			createdAt: true
 		}
 	})
 
@@ -115,20 +121,36 @@ const profile = catchAsync(async (req, res, next) => {
 const userBooks = catchAsync(async (req, res, next) => {
 	const userId = req.userId;
 
-	let userbooks;
-	try {
-		userbooks = await prisma.user.findUniqueOrThrow({
-			relationLoadStrategy: 'join',
-			where: {
-				id: userId,
-			},
-			select: {
-				books: true
+	// let userbooks;
+	// try {
+	// 	userbooks = await prisma.user.findUniqueOrThrow({
+	// 		relationLoadStrategy: 'join',
+	// 		where: {
+	// 			id: userId,
+	// 		},
+	// 		select: {
+	// 			books: true
+	// 		}
+	// 	})
+	// } catch (err) {
+	// 	return next(new AppError("No user Found with This Id", 404))
+	// }
+
+	const userbooks = await prisma.user.findUnique({
+		where: {
+			id: userId
+		},
+		include: {
+			books: {
+				orderBy: {
+					createdAt: 'desc',
+				},
 			}
-		})
-	} catch (err) {
-		return next(new AppError("No user Found with This Id", 404))
-	}
+
+		}
+	})
+
+
 
 	res.status(200).json({
 		status: "OK",

@@ -14,10 +14,13 @@ const allBooks = catchAsync(async (req, res, next) => {
 
 
 const createBook = catchAsync(async (req, res, next) => {
-	const { description, author, book_url, startDate, endDate } = req.body;
+	const { description, author, coverImage, startDate, finishDate } = req.body;
 	const userId = req.userId;
 
-	if (!author || !book_url || !description || !startDate || !endDate) {
+
+	console.log(req.body)
+
+	if (!author || !coverImage || !description || !startDate || !finishDate) {
 		return next(new AppError("Missing Important Fields", 404));
 	}
 
@@ -26,9 +29,9 @@ const createBook = catchAsync(async (req, res, next) => {
 			user_id: userId,
 			author,
 			description,
-			endDate: new Date(endDate),
+			endDate: new Date(finishDate),
 			startDate: new Date(startDate),
-			book_url,
+			book_url: coverImage
 		}
 	})
 

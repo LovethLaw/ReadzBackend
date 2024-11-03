@@ -17,17 +17,16 @@ const protect = catchAsync(async (req, res, next) => {
 
 	const redisToken = await redisClient.get(authTokenKey);
 	if (!redisToken) {
-		return next(new AppError("Token has expired",))
+		return next(new AppError("Token has expired", 401))
 	}
 
-	try {
-		const user = await prisma.user.findUniqueOrThrow({
-			where: {
-				id: decoded.id,
-			}
-		})
+	const user = await prisma.user.findUnique({
+		where: {
+			id: decoded.id,
+		}
+	})
 
-	} catch (err) {
+	if (!user) {
 		return next(new AppError("User with this token is no longer available", 401))
 	}
 
